@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FinalProject.SearchFXMLController">
+    <stylesheets>
+        <URL value="@searchfxml.css"/>
+    </stylesheets>
+    <center>
+        <GridPane alignment="center">
+            <Label text="Search Title"/>
+            <TextField fx:id="txtSearch" GridPane.columnIndex="1" />
+            <Button text="Enter" onAction="#onEnter" GridPane.columnIndex="2"/>
+            <Label fx:id="lblDisplay" GridPane.rowIndex="1" />
+            <Button text="Exit"  GridPane.rowIndex="2" />
+        </GridPane>
+    </center>
+</BorderPane>
