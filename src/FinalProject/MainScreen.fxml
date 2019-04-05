@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FinalProject.MainScreenController">
+    <stylesheets>
+        <URL value="@mainscreen.css"/>
+    </stylesheets>
+    <center>
+    <GridPane hgap="10" vgap="10" alignment="center">
+        <Label text="Search: "/>
+        <TextField fx:id="txtSearch" GridPane.columnIndex="1"/>
+        <Label fx:id="lblDisplay" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
+        <Button text="Add New Book" GridPane.rowIndex="2" onAction="#onAdd"/>
+        <Button text="Display Book" fx:id="btnDisplay" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    </GridPane>  
+    </center>
+</BorderPane>
