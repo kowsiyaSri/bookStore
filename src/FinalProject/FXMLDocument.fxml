@@ -16,8 +16,8 @@
             </Menu>
             <Menu text="Help">
                 <items>
-                    <MenuItem text="About Us"/>
-                    <MenuItem text="Contact Us"/>
+                    <MenuItem text="About Us" onAction="#onAbout"/>
+                    <MenuItem text="Contact Us" onAction="#onContact"/>
                 </items>
             </Menu>
         </menus>

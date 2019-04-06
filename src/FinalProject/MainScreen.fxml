@@ -7,17 +7,26 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FinalProject.MainScreenController">
+<BorderPane styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FinalProject.MainScreenController" >
     <stylesheets>
         <URL value="@mainscreen.css"/>
     </stylesheets>
     <center>
-    <GridPane hgap="10" vgap="10" alignment="center">
-        <Label text="Search: "/>
-        <TextField fx:id="txtSearch" GridPane.columnIndex="1"/>
-        <Label fx:id="lblDisplay" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
-        <Button text="Add New Book" GridPane.rowIndex="2" onAction="#onAdd"/>
-        <Button text="Display Book" fx:id="btnDisplay" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-    </GridPane>  
+        <GridPane styleClass="mainFxmlClass" alignment="center">
+        <Label text="Title:"/>
+        <TextField minWidth="50" minHeight="10" GridPane.columnIndex="1" fx:id="txtTitle"/>
+        <Label text="Purchase Price:" GridPane.rowIndex="1"/>
+        <TextField minWidth="50" minHeight="10" GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="txtPrice"/>
+        <Label text="First Name:" GridPane.rowIndex="2"/>
+        <TextField minWidth="50" minHeight="10" GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="txtFirstName"/>
+        <Label text="Last Name:" GridPane.rowIndex="3"/>
+        <TextField minWidth="50" minHeight="10" GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="txtLastName"/>
+        <Button text="Add" GridPane.rowIndex="4" onAction="#onAdd"/> 
+        <Button text="Save" GridPane.rowIndex="4" GridPane.columnIndex="1" onAction="#onSave"/>
+        <Button text="Display Books" GridPane.rowIndex="4" GridPane.columnIndex="2" onAction="#onDisplay"/>
+        <Button text="Search" GridPane.rowIndex="5" onAction="#onSearch" />
+        <Button fx:id="btnExit" text="Exit" GridPane.rowIndex="5" GridPane.columnIndex="1" onAction="#onExit"/>
+        <ListView fx:id="lvDisplay" GridPane.rowIndex="6" GridPane.columnSpan="3" />    
+        </GridPane>
     </center>
 </BorderPane>

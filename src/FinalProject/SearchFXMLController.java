@@ -10,28 +10,20 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author Kowsiya Sri
  */
-public class AddNewBookController implements Initializable {
-    
+public class SearchFXMLController implements Initializable {
+
+    /**
+     * Initializes the controller class.
+     */
     @FXML
-    Button btnExit;
+    private void onEnter(ActionEvent event){
     
-    @FXML
-    private void onExit(ActionEvent event){
-        Stage stage = (Stage) btnExit.getScene().getWindow();
-        stage.close();
-    }
-    
-    @FXML 
-    private void onAdd(ActionEvent event){
-        
     }
     
     @Override

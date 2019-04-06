@@ -13,25 +13,31 @@ public class Book {
     
     //Book properties
     private String title;
-    private String author;
+    private String lastName;
+    private String firstName;
     private double price;
-    private final int STRING_LENGTH = 20;
+    private final int NAME_LENGTH = 20;
+    private final int BOOKNAME_LENGTH = 50;
     
     //default constructor
     public Book(){   
     }
     
     //constructor
-    public Book(String t, String a, double p){
-        setTitle(t);
-        setAuthor(a);
-        setPrice(p);
+    public Book(String title, String firstName, String lastName, double price) throws InvalidNameException{
+        
+        setTitle(title);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setPrice(price);
     }
     
     //accesor and mutator methods for title
-    public void setTitle(String title){
-        
-        this.title = title;
+    public void setTitle(String title) throws InvalidNameException{
+        if(title.length() < BOOKNAME_LENGTH)
+            this.title=title;
+        else 
+            throw new InvalidNameException(title);
     }
     
     public String getTitle(){
@@ -39,17 +45,35 @@ public class Book {
     }
     
     //accessor and mutator methods for author
-    public void setAuthor(String author){
-        this.author = author;
+    public void setLastName(String lName) throws InvalidNameException{
+        if(lName.matches("/^([^0-9]*)$/") && lName.length() < NAME_LENGTH)
+            this.firstName = lName;
+        else 
+            throw new InvalidNameException(lName);
     }
     
-    public String getAuthor(){
-        return author;
+    public String getLastName(){
+        return lastName;
+    }
+    
+    //accessor and mutator methods for author
+    public void setFirstName(String fName) throws InvalidNameException{
+        if(fName.matches("/^([^0-9]*)$/") && fName.length() < NAME_LENGTH)
+            this.firstName = fName;
+        else 
+            throw new InvalidNameException(fName);
+    }
+    
+    public String getFirstName(){
+        return firstName;
     }
     
     //accessor and mutator methods for price
     public void setPrice(double price){
-        this.price = price;
+        if(price > 0)
+            this.price = price;
+        else
+            System.out.println("Number must be greater than 0.");
     }
     
     public double getPrice(){
@@ -58,6 +82,6 @@ public class Book {
     
     @Override
     public String toString(){
-        return"";
+        return getTitle();
     }
 }
