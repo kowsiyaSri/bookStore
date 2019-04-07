@@ -6,9 +6,17 @@ package FinalProject;
  * and open the template in the editor.
  */
 
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,14 +26,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
-import javafx.stage.Modality;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+
 
 /**
  * FXML Controller class
@@ -34,6 +43,7 @@ import javafx.stage.StageStyle;
  */
 public class MainScreenController implements Initializable {
 
+    //FXML properties
     @FXML
     ListView lvDisplay;
     
@@ -43,37 +53,121 @@ public class MainScreenController implements Initializable {
     @FXML
     Button btnExit;
     
-    private static ArrayList<Book> bookList = new ArrayList<>();
-    
     @FXML
-    private void onExit(ActionEvent event){
+    Label lblStatus;
+    
+    //java properties 
+    private static ArrayList<Book> books;
+    File file = new File("bookList.txt");
+    FileOutputStream fo;
+    FileInputStream fi;
+    ObjectInputStream oi;
+    ObjectOutputStream os; 
+    
+    //handles exit button action
+    @FXML
+    private void onExit(ActionEvent event) throws IOException{
+        if(fi!=null)fi.close();
+        if(oi!=null)oi.close();
+        if(os!=null)os.close();
+        if(fo!=null)fo.close();
         Stage stage = (Stage) btnExit.getScene().getWindow();
         stage.close();
     }
 
+    //handles add button action and adds new Book to file
     @FXML
-    private void onAdd(ActionEvent event){
+    private void onAdd(ActionEvent event) throws FileNotFoundException, IOException, ClassNotFoundException{
+        if(file.length() != 0)
+            openList();
+        try{
+            String title = txtTitle.getText().trim();
+            String fName = txtFirstName.getText().trim();
+            String lName = txtLastName.getText().trim();
+            String price = txtPrice.getText();
+            
+            if(title.equals("")== false && fName.equals("")== false &&
+                lName.equals("")== false && price.equals("")== false){
+                if(txtTitle.isEditable() == true){
+                    Book b = new Book();
+                    b.setTitle(title);
+                    b.setFirstName(fName);
+                    b.setLastName(lName);
+                    b.setPrice(Double.parseDouble(price));
+                    books.add(b);
+                    saveBooks();
+                    lblStatus.setText("Book Added Successfully!");
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Cannot Duplicate");
+                    alert.setContentText("Cannot add book already on list. \n" +
+                            "To update book please select UPDATE.");
+                    alert.show(); 
+                    lblStatus.setText("Error: Book not added!");
+                    txtTitle.setEditable(true);
+                    txtFirstName.setEditable(true);
+                    txtLastName.setEditable(true);
+                    txtPrice.setEditable(true);
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Invalid Entry");
+                alert.setContentText("All feilds must be filled!");
+                alert.show(); 
+                lblStatus.setText("Error: Book not added!");
+            }
+            
+            txtTitle.clear();
+            txtFirstName.clear();
+            txtLastName.clear();
+            txtPrice.clear();
+            txtTitle.requestFocus();  
+        }catch (InvalidNameException n){
+            
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Invalid Entry");
+            alert.setContentText("Title should not be longer than 50 characters and"
+                + " name feilds cannot be longer than 25 characters(no numbers)" );
+            alert.show(); 
+            lblStatus.setText("Error: Book not added!");
+            txtTitle.requestFocus();
+        }catch (Exception e){
+            
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Invalid Entry");
+            alert.setContentText("Please enter a price from $0.01 - $1000.00");
+            alert.show(); 
+            lblStatus.setText("Error: Book not added!");
+            txtPrice.requestFocus();
+        }
         
-        Book b = new Book();
-        b.setTitle(txtTitle.getText());
-        b.setFirstName(txtFirstName.getText());
-        b.setLastName(txtLastName.getText());
-        b.setPrice(Double.parseDouble(txtPrice.getText()));
-        bookList.add(b);
+    }
+    
+    //handles display button and display listview of books
+    @FXML
+    private void onDisplay(ActionEvent event) throws IOException, FileNotFoundException, ClassNotFoundException{ 
 
-    }
-    
-    @FXML
-    private void onSave(ActionEvent event){
+        if(file.length() > 0){
+            openList();
+            ObservableList<Book> items = FXCollections.observableArrayList(books);
+            lvDisplay.setItems(items);    
+        }
         
+        if(books.isEmpty() || file.length()== 0){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("There is no list to display.");
+            alert.show(); 
+            txtTitle.requestFocus();
+        }
     }
     
-    @FXML
-    private void onDisplay(ActionEvent event){
-        ObservableList<Book> items = FXCollections.observableArrayList(bookList);
-        lvDisplay.setItems(items);    
-    }
-    
+    //handles search button action and opens new window to search array
     @FXML
     private void onSearch(ActionEvent event) throws IOException{
         FXMLLoader fxmlLoader = new FXMLLoader (getClass().getResource("SearchFXML.fxml"));
@@ -85,9 +179,189 @@ public class MainScreenController implements Initializable {
         stage.show(); 
     }
     
+    //handles clear button action and clears all textfields 
+    @FXML
+    private void onClear(ActionEvent event){
+        
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Clear");
+        alert.setContentText("Are you sure you want to clear?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if((result.isPresent())&&(result.get()== ButtonType.OK)){
+            txtTitle.clear();
+            txtFirstName.clear();
+            txtLastName.clear();
+            txtPrice.clear();
+            txtTitle.setEditable(true);
+            txtFirstName.setEditable(true);
+            txtLastName.setEditable(true);
+            txtPrice.setEditable(true);
+            txtTitle.requestFocus();
+            lblStatus.setText("Feilds were cleared");
+        }
+    }
+    
+    // handles selection from listview
+    @FXML
+    private void onSelection(MouseEvent event){
+        try{
+            if(lvDisplay.getSelectionModel().isEmpty()){
+                txtTitle.requestFocus();
+            }
+            Book temp = (Book)lvDisplay.getSelectionModel().getSelectedItem();
+            lblStatus.setText(temp.toString());
+            
+            txtTitle.setEditable(false);
+            txtTitle.setText(temp.getTitle());
+            txtFirstName.setText(temp.getFirstName());
+            txtLastName.setText(temp.getLastName());
+            txtPrice.setText(String.valueOf(temp.getPrice()));
+        }catch(Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("There is no list to select.");
+            alert.show();         
+        }
+    }
+    
+    //Handles delete button and deletes book from record
+    @FXML
+    private void onDelete(ActionEvent event) throws IOException, FileNotFoundException, ClassNotFoundException{
+        
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm");
+        alert.setContentText("Are you sure you want to DELETE the record?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if((result.isPresent())&&(result.get()== ButtonType.OK)){
+            openList();
+            for(int i = 0; i < books.size(); i++){
+                String b = books.get(i).getTitle();
+                if(b.equals(txtTitle.getText())){
+                    books.remove(i);
+                    txtTitle.clear();
+                    txtFirstName.clear();
+                    txtLastName.clear();
+                    txtPrice.clear();
+                }
+            }
+            saveBooks();
+            lblStatus.setText("Record Deleted! To refresh list press Display List.");
+        }
+    }
+    
+    //allows user to update the file
+    @FXML
+    private void onUpdate(ActionEvent event) throws IOException, FileNotFoundException, ClassNotFoundException{
+        
+        Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
+        alert1.setTitle("Confirm");
+        alert1.setContentText("Are you sure you want to Update the record?");
+        Optional<ButtonType> result = alert1.showAndWait();
+        if((result.isPresent())&&(result.get()== ButtonType.OK)){
+            openList();
+            int index = books.size();
+            for(int i = 0; i < books.size(); i++){
+                String b = books.get(i).getTitle();
+                if(b.equals(txtTitle.getText())){
+                    index = i;
+                }                
+            }
+
+            try{
+                String fName = txtFirstName.getText().trim();
+                String lName = txtLastName.getText().trim();
+                String price = txtPrice.getText();
+
+                if(fName.equals("")== false && lName.equals("")== false && price.equals("")== false){
+                    Book b = books.get(index);
+                    b.setFirstName(fName);
+                    b.setLastName(lName);
+                    b.setPrice(Double.parseDouble(price));
+                    saveBooks();
+                    lblStatus.setText("Book Updated Successfully! " +
+                            "To view update please press Display List and select book.");
+                }else{
+                    Alert alert2 = new Alert(Alert.AlertType.ERROR);
+                    alert2.setTitle("Error");
+                    alert2.setHeaderText("Invalid Entry");
+                    alert2.setContentText("All feilds must be filled!");
+                    alert2.show(); 
+                    lblStatus.setText("Error: Book not Updated!");
+                }          
+                txtTitle.clear();
+                txtFirstName.clear();
+                txtLastName.clear();
+                txtPrice.clear();
+                txtTitle.requestFocus();  
+
+            }catch (InvalidNameException n){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Invalid Entry");
+                alert.setContentText("Title should not be longer than 50 characters and"
+                    + " name feilds cannot be longer than 25 characters(no numbers)" );
+                alert.show(); 
+                lblStatus.setText("Error: Book not updated!");
+                txtTitle.requestFocus();
+            }catch (Exception e){
+
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Invalid Entry");
+                alert.setContentText("Please enter a price from $0.01 - $1000.00");
+                alert.show(); 
+                lblStatus.setText("Error: Book not updated!");
+                txtPrice.requestFocus();
+            }  
+        }
+    }
+    
+    //saves arraylist of books in a file
+    private void saveBooks(){
+        
+        try{
+            
+            fo = new FileOutputStream(file);
+            os = new ObjectOutputStream(fo);
+            for(Book b: books)
+                os.writeObject(b);
+            
+            os.close();
+            fo.close();
+            
+        }catch (Exception e){
+            
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("File does not exist");
+            alert.show(); 
+        }
+    }
+    
+    //creates array list of books from file
+    private void openList() throws FileNotFoundException, IOException, ClassNotFoundException{
+        
+        books.clear();
+        fi = new FileInputStream(file);
+        oi = new ObjectInputStream(fi);
+
+        try{
+            while(true){
+                Book b = (Book)oi.readObject();
+                books.add(b);
+            }                
+        }catch(EOFException ex){} 
+
+        fi.close();
+        oi.close();
+    }
+     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
+        books = new ArrayList<>();
     }    
     
 }

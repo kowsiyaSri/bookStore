@@ -9,14 +9,14 @@ package FinalProject;
  *
  * @author Kowsiya Sri
  */
-public class Book {
+public class Book implements java.io.Serializable{
     
     //Book properties
     private String title;
     private String lastName;
     private String firstName;
     private double price;
-    private final int NAME_LENGTH = 20;
+    private final int NAME_LENGTH = 25;
     private final int BOOKNAME_LENGTH = 50;
     
     //default constructor
@@ -24,17 +24,21 @@ public class Book {
     }
     
     //constructor
-    public Book(String title, String firstName, String lastName, double price) throws InvalidNameException{
+    public Book(String title, String firstName, String lastName, double price){
         
-        setTitle(title);
-        setFirstName(firstName);
-        setLastName(lastName);
-        setPrice(price);
+        try{
+            setTitle(title);
+            setFirstName(firstName);
+            setLastName(lastName);
+            setPrice(price);
+        }catch(Exception e){
+            System.out.println("Error");
+        }
     }
     
     //accesor and mutator methods for title
     public void setTitle(String title) throws InvalidNameException{
-        if(title.length() < BOOKNAME_LENGTH)
+        if(title.length() <= BOOKNAME_LENGTH)
             this.title=title;
         else 
             throw new InvalidNameException(title);
@@ -46,8 +50,9 @@ public class Book {
     
     //accessor and mutator methods for author
     public void setLastName(String lName) throws InvalidNameException{
-        if(lName.matches("/^([^0-9]*)$/") && lName.length() < NAME_LENGTH)
-            this.firstName = lName;
+        if(lName.matches("(?i)(^[a-z])((?![ .,'-]$)[a-z .,'-]){0,24}$") 
+                && lName.length() <= NAME_LENGTH)
+            this.lastName = lName;
         else 
             throw new InvalidNameException(lName);
     }
@@ -58,7 +63,8 @@ public class Book {
     
     //accessor and mutator methods for author
     public void setFirstName(String fName) throws InvalidNameException{
-        if(fName.matches("/^([^0-9]*)$/") && fName.length() < NAME_LENGTH)
+        if(fName.matches("(?i)(^[a-z])((?![ .,'-]$)[a-z .,'-]){0,24}$")
+                && fName.length() <= NAME_LENGTH)
             this.firstName = fName;
         else 
             throw new InvalidNameException(fName);
@@ -80,6 +86,7 @@ public class Book {
         return price;
     }
     
+    //method that prints book title when to string is called
     @Override
     public String toString(){
         return getTitle();

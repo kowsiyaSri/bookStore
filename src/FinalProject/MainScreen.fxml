@@ -22,11 +22,14 @@
         <Label text="Last Name:" GridPane.rowIndex="3"/>
         <TextField minWidth="50" minHeight="10" GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="txtLastName"/>
         <Button text="Add" GridPane.rowIndex="4" onAction="#onAdd"/> 
-        <Button text="Save" GridPane.rowIndex="4" GridPane.columnIndex="1" onAction="#onSave"/>
+        <Button text="Clear" GridPane.rowIndex="4" GridPane.columnIndex="1" onAction="#onClear"/>
         <Button text="Display Books" GridPane.rowIndex="4" GridPane.columnIndex="2" onAction="#onDisplay"/>
-        <Button text="Search" GridPane.rowIndex="5" onAction="#onSearch" />
-        <Button fx:id="btnExit" text="Exit" GridPane.rowIndex="5" GridPane.columnIndex="1" onAction="#onExit"/>
-        <ListView fx:id="lvDisplay" GridPane.rowIndex="6" GridPane.columnSpan="3" />    
+        <Button text="Delete" GridPane.rowIndex="5" onAction="#onDelete"/>
+        <Button text="Search" GridPane.rowIndex="5" GridPane.columnIndex="1" onAction="#onSearch" />
+        <Button text="Update" GridPane.rowIndex="5" GridPane.columnIndex="2" onAction="#onUpdate"/>
+        <ListView fx:id="lvDisplay" GridPane.rowIndex="6" GridPane.columnSpan="3" onMouseClicked="#onSelection"/>    
+        <Label fx:id="lblStatus" GridPane.rowIndex="7"/>
+        <Button text="Exit" fx:id="btnExit" GridPane.rowIndex="8" onAction="#onExit"/> 
         </GridPane>
     </center>
 </BorderPane>

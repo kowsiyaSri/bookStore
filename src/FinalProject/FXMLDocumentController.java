@@ -34,7 +34,7 @@ public class FXMLDocumentController implements Initializable {
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initStyle(StageStyle.DECORATED);
-        stage.setTitle("New Window");
+        stage.setTitle("Book Inventory");
         stage.setScene(new Scene(root1));
         stage.setMaximized(true);
         stage.show(); 
