@@ -76,7 +76,7 @@ public class Book implements java.io.Serializable{
     
     //accessor and mutator methods for price
     public void setPrice(double price){
-        if(price > 0)
+        if(price >= 0)
             this.price = price;
         else
             System.out.println("Number must be greater than 0.");

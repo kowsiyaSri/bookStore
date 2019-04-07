@@ -12,15 +12,15 @@
         <URL value="@mainscreen.css"/>
     </stylesheets>
     <center>
-        <GridPane styleClass="mainFxmlClass" alignment="center">
+        <GridPane hgap="10" vgap="10" styleClass="mainFxmlClass" alignment="center">
         <Label text="Title:"/>
-        <TextField minWidth="50" minHeight="10" GridPane.columnIndex="1" fx:id="txtTitle"/>
+        <TextField minWidth="50" minHeight="10" GridPane.columnIndex="1" GridPane.columnSpan="2" fx:id="txtTitle"/>
         <Label text="Purchase Price:" GridPane.rowIndex="1"/>
-        <TextField minWidth="50" minHeight="10" GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="txtPrice"/>
+        <TextField minWidth="50" minHeight="10" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2" fx:id="txtPrice"/>
         <Label text="First Name:" GridPane.rowIndex="2"/>
-        <TextField minWidth="50" minHeight="10" GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="txtFirstName"/>
+        <TextField minWidth="50" minHeight="10" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="2" fx:id="txtFirstName"/>
         <Label text="Last Name:" GridPane.rowIndex="3"/>
-        <TextField minWidth="50" minHeight="10" GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="txtLastName"/>
+        <TextField minWidth="50" minHeight="10" GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.columnSpan="2" fx:id="txtLastName"/>
         <Button text="Add" GridPane.rowIndex="4" onAction="#onAdd"/> 
         <Button text="Clear" GridPane.rowIndex="4" GridPane.columnIndex="1" onAction="#onClear"/>
         <Button text="Display Books" GridPane.rowIndex="4" GridPane.columnIndex="2" onAction="#onDisplay"/>
@@ -28,7 +28,7 @@
         <Button text="Search" GridPane.rowIndex="5" GridPane.columnIndex="1" onAction="#onSearch" />
         <Button text="Update" GridPane.rowIndex="5" GridPane.columnIndex="2" onAction="#onUpdate"/>
         <ListView fx:id="lvDisplay" GridPane.rowIndex="6" GridPane.columnSpan="3" onMouseClicked="#onSelection"/>    
-        <Label fx:id="lblStatus" GridPane.rowIndex="7"/>
+        <Label fx:id="lblStatus" GridPane.rowIndex="7" GridPane.columnSpan="3"/>
         <Button text="Exit" fx:id="btnExit" GridPane.rowIndex="8" onAction="#onExit"/> 
         </GridPane>
     </center>

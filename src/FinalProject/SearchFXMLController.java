@@ -11,16 +11,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
-/**
- * FXML Controller class
- *
- * @author Kowsiya Sri
- */
+
 public class SearchFXMLController implements Initializable {
 
-    /**
-     * Initializes the controller class.
-     */
+    
     @FXML
     private void onEnter(ActionEvent event){
     

@@ -1,9 +1,7 @@
 package FinalProject;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * should we add book ID instead of comparing titles?
  */
 
 import java.io.EOFException;
@@ -84,19 +82,30 @@ public class MainScreenController implements Initializable {
             String title = txtTitle.getText().trim();
             String fName = txtFirstName.getText().trim();
             String lName = txtLastName.getText().trim();
-            String price = txtPrice.getText();
-            
+            String price = txtPrice.getText().trim();
+
             if(title.equals("")== false && fName.equals("")== false &&
                 lName.equals("")== false && price.equals("")== false){
                 if(txtTitle.isEditable() == true){
-                    Book b = new Book();
-                    b.setTitle(title);
-                    b.setFirstName(fName);
-                    b.setLastName(lName);
-                    b.setPrice(Double.parseDouble(price));
-                    books.add(b);
-                    saveBooks();
-                    lblStatus.setText("Book Added Successfully!");
+                    if(price.matches("^(?:0|[1-9]\\d{0,2})(?:\\.([0-9]{2}|[0-9]{1}))?$")){
+                        Book b = new Book();
+                        b.setTitle(title);
+                        b.setFirstName(fName);
+                        b.setLastName(lName);
+                        b.setPrice(Double.parseDouble(price));
+                        books.add(b);
+                        saveBooks();
+                        lblStatus.setText("Book Added Successfully!");
+                    }else{
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Invalid Entry");
+                        alert.setContentText("Please enter a price from $0.00 - $999.99! \n" 
+                            + " And no leading zeros.");
+                        alert.show(); 
+                        lblStatus.setText("Error: Book not added!");
+                        txtPrice.requestFocus();
+                    }
                 }else{
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
@@ -139,7 +148,8 @@ public class MainScreenController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Invalid Entry");
-            alert.setContentText("Please enter a price from $0.01 - $1000.00");
+            alert.setContentText("Please enter a price from $0.00 - $999.99. \n" 
+                + "No other characters other than digits.");
             alert.show(); 
             lblStatus.setText("Error: Book not added!");
             txtPrice.requestFocus();
@@ -254,10 +264,10 @@ public class MainScreenController implements Initializable {
     @FXML
     private void onUpdate(ActionEvent event) throws IOException, FileNotFoundException, ClassNotFoundException{
         
-        Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
-        alert1.setTitle("Confirm");
-        alert1.setContentText("Are you sure you want to Update the record?");
-        Optional<ButtonType> result = alert1.showAndWait();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm");
+        alert.setContentText("Are you sure you want to Update the record?");
+        Optional<ButtonType> result = alert.showAndWait();
         if((result.isPresent())&&(result.get()== ButtonType.OK)){
             openList();
             int index = books.size();
@@ -274,13 +284,24 @@ public class MainScreenController implements Initializable {
                 String price = txtPrice.getText();
 
                 if(fName.equals("")== false && lName.equals("")== false && price.equals("")== false){
-                    Book b = books.get(index);
-                    b.setFirstName(fName);
-                    b.setLastName(lName);
-                    b.setPrice(Double.parseDouble(price));
-                    saveBooks();
-                    lblStatus.setText("Book Updated Successfully! " +
-                            "To view update please press Display List and select book.");
+                    if(price.matches("^(?:0|[1-9]\\d{0,2})(?:\\.([0-9]{2}|[0-9]{1}))?$")){
+                        Book b = books.get(index);
+                        b.setFirstName(fName);
+                        b.setLastName(lName);
+                        b.setPrice(Double.parseDouble(price));
+                        saveBooks();
+                        lblStatus.setText("Book Updated Successfully! " +
+                                "To view update please press Display List and select book.");
+                    }else{
+                        Alert alert1 = new Alert(Alert.AlertType.ERROR);
+                        alert1.setTitle("Error");
+                        alert1.setHeaderText("Invalid Entry");
+                        alert1.setContentText("Please enter a price from $0.00 - $999.99! \n" 
+                            + " And no leading zeros.");
+                        alert1.show(); 
+                        lblStatus.setText("Error: Book not added!");
+                        txtPrice.requestFocus();
+                    }
                 }else{
                     Alert alert2 = new Alert(Alert.AlertType.ERROR);
                     alert2.setTitle("Error");
@@ -296,21 +317,21 @@ public class MainScreenController implements Initializable {
                 txtTitle.requestFocus();  
 
             }catch (InvalidNameException n){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Invalid Entry");
-                alert.setContentText("Title should not be longer than 50 characters and"
+                Alert alert3 = new Alert(Alert.AlertType.ERROR);
+                alert3.setTitle("Error");
+                alert3.setHeaderText("Invalid Entry");
+                alert3.setContentText("Title should not be longer than 50 characters and"
                     + " name feilds cannot be longer than 25 characters(no numbers)" );
-                alert.show(); 
+                alert3.show(); 
                 lblStatus.setText("Error: Book not updated!");
                 txtTitle.requestFocus();
             }catch (Exception e){
 
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Invalid Entry");
-                alert.setContentText("Please enter a price from $0.01 - $1000.00");
-                alert.show(); 
+                Alert alert4 = new Alert(Alert.AlertType.ERROR);
+                alert4.setTitle("Error");
+                alert4.setHeaderText("Invalid Entry");
+                alert4.setContentText("Please enter a price from $0.01 - $1000.00");
+                alert4.show(); 
                 lblStatus.setText("Error: Book not updated!");
                 txtPrice.requestFocus();
             }  
