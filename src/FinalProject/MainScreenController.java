@@ -7,7 +7,6 @@ package FinalProject;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -64,18 +63,28 @@ public class MainScreenController implements Initializable {
     
     //handles exit button action
     @FXML
-    private void onExit(ActionEvent event) throws IOException{
-        if(fi!=null)fi.close();
-        if(oi!=null)oi.close();
-        if(os!=null)os.close();
-        if(fo!=null)fo.close();
-        Stage stage = (Stage) btnExit.getScene().getWindow();
-        stage.close();
+    private void onExit(ActionEvent event){
+        
+        try{
+            if(fi!=null)fi.close();
+            if(oi!=null)oi.close();
+            if(os!=null)os.close();
+            if(fo!=null)fo.close();
+        }catch(IOException i){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("File error!");
+            alert.show(); 
+        }finally{
+            Stage stage = (Stage) btnExit.getScene().getWindow();
+            stage.close();
+        }
     }
 
     //handles add button action and adds new Book to file
     @FXML
-    private void onAdd(ActionEvent event) throws FileNotFoundException, IOException, ClassNotFoundException{
+    private void onAdd(ActionEvent event){
         if(file.length() != 0)
             openList();
         try{
@@ -159,7 +168,7 @@ public class MainScreenController implements Initializable {
     
     //handles display button and display listview of books
     @FXML
-    private void onDisplay(ActionEvent event) throws IOException, FileNotFoundException, ClassNotFoundException{ 
+    private void onDisplay(ActionEvent event){ 
 
         if(file.length() > 0){
             openList();
@@ -179,14 +188,23 @@ public class MainScreenController implements Initializable {
     
     //handles search button action and opens new window to search array
     @FXML
-    private void onSearch(ActionEvent event) throws IOException{
-        FXMLLoader fxmlLoader = new FXMLLoader (getClass().getResource("SearchFXML.fxml"));
-        Parent root1 = (Parent) fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.setTitle("Search");
-        stage.setScene(new Scene(root1));
-        stage.setMaximized(true);
-        stage.show(); 
+    private void onSearch(ActionEvent event){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader (getClass().getResource("SearchFXML.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Search");
+            stage.setScene(new Scene(root1));
+            stage.setMaximized(true);
+            stage.show(); 
+        }catch(IOException i){
+            
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("Error loading search windows.");
+            alert.show(); 
+        }
     }
     
     //handles clear button action and clears all textfields 
@@ -203,9 +221,6 @@ public class MainScreenController implements Initializable {
             txtLastName.clear();
             txtPrice.clear();
             txtTitle.setEditable(true);
-            txtFirstName.setEditable(true);
-            txtLastName.setEditable(true);
-            txtPrice.setEditable(true);
             txtTitle.requestFocus();
             lblStatus.setText("Feilds were cleared");
         }
@@ -237,7 +252,7 @@ public class MainScreenController implements Initializable {
     
     //Handles delete button and deletes book from record
     @FXML
-    private void onDelete(ActionEvent event) throws IOException, FileNotFoundException, ClassNotFoundException{
+    private void onDelete(ActionEvent event){
         
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm");
@@ -262,7 +277,7 @@ public class MainScreenController implements Initializable {
     
     //allows user to update the file
     @FXML
-    private void onUpdate(ActionEvent event) throws IOException, FileNotFoundException, ClassNotFoundException{
+    private void onUpdate(ActionEvent event){
         
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm");
@@ -362,21 +377,38 @@ public class MainScreenController implements Initializable {
     }
     
     //creates array list of books from file
-    private void openList() throws FileNotFoundException, IOException, ClassNotFoundException{
+    private void openList(){
         
-        books.clear();
-        fi = new FileInputStream(file);
-        oi = new ObjectInputStream(fi);
-
         try{
+            books.clear();
+            fi = new FileInputStream(file);
+            oi = new ObjectInputStream(fi);
+
             while(true){
                 Book b = (Book)oi.readObject();
                 books.add(b);
-            }                
-        }catch(EOFException ex){} 
-
-        fi.close();
-        oi.close();
+            } 
+        }catch(EOFException ex){
+            System.out.println("End of File");
+        }catch(Exception e){
+            
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("File Not Found");
+            alert.setContentText("File or Class cannot be found.");
+            alert.show();          
+        }
+        try{
+            fi.close();
+            oi.close();
+        }catch(IOException i){
+            
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("File Not Found");
+            alert.setContentText("File or Class cannot be found.");
+            alert.show();   
+        }
     }
      
     @Override

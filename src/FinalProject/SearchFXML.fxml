@@ -17,7 +17,9 @@
             <TextField fx:id="txtSearch" GridPane.columnIndex="1" />
             <Button text="Enter" onAction="#onEnter" GridPane.columnIndex="2"/>
             <Label fx:id="lblDisplay" GridPane.rowIndex="1"  GridPane.columnSpan="3"/>
-            <Button text="Exit"  GridPane.rowIndex="2" />
+            <Button text="Exit" fx:id="btnExit" GridPane.rowIndex="2" onAction="#onExit"/>
+            <Button text="Clear" fx:id="btnClear" GridPane.rowIndex="2" GridPane.columnIndex="1" onAction="#onClear"/>
+            <Label fx:id="lblStatus" GridPane.rowIndex="3" GridPane.columnSpan="3"/>
         </GridPane>
     </center>
 </BorderPane>

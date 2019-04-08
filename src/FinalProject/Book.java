@@ -16,8 +16,8 @@ public class Book implements java.io.Serializable{
     private String lastName;
     private String firstName;
     private double price;
-    private final int NAME_LENGTH = 25;
-    private final int BOOKNAME_LENGTH = 50;
+    private int NAME_LENGTH = 25;
+    public static int BOOKNAME_LENGTH = 50;
     
     //default constructor
     public Book(){   
@@ -32,7 +32,7 @@ public class Book implements java.io.Serializable{
             setLastName(lastName);
             setPrice(price);
         }catch(Exception e){
-            System.out.println("Error");
+            System.out.println("Error : Book not created.");
         }
     }
     
