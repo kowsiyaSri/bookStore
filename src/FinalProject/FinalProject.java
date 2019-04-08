@@ -5,11 +5,16 @@
  */
 package FinalProject;
 
+import java.util.Optional;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -24,6 +29,21 @@ public class FinalProject extends Application {
         Scene scene = new Scene(root);
         stage.setMaximized(true);
         stage.setScene(scene);
+        
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>(){
+            public void handle(WindowEvent event){
+                System.out.println("on hiding event");           
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirm");
+                alert.setContentText("Are you sure you want to close?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if((result.isPresent())&&(result.get()== ButtonType.OK)){
+                   
+                }else{
+                    event.consume();
+                }  
+            }
+        });
         stage.show();
     }
 

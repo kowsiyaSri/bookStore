@@ -6,18 +6,22 @@
 package FinalProject;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -32,11 +36,23 @@ public class FXMLDocumentController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader (getClass().getResource("MainScreen.fxml"));
         Parent root1 = (Parent) fxmlLoader.load();
         Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initStyle(StageStyle.DECORATED);
         stage.setTitle("Book Inventory");
         stage.setScene(new Scene(root1));
         stage.setMaximized(true);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>(){
+            public void handle(WindowEvent event){
+                System.out.println("on hiding event");           
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirm");
+                alert.setContentText("Are you sure you want to close?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if((result.isPresent())&&(result.get()== ButtonType.OK)){
+                   
+                }else{
+                    event.consume();
+                }  
+            }
+        });
         stage.show(); 
     }
     

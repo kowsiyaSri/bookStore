@@ -92,51 +92,52 @@ public class MainScreenController implements Initializable {
             String fName = txtFirstName.getText().trim();
             String lName = txtLastName.getText().trim();
             String price = txtPrice.getText().trim();
-
-            if(title.equals("")== false && fName.equals("")== false &&
-                lName.equals("")== false && price.equals("")== false){
-                if(txtTitle.isEditable() == true){
-                    if(price.matches("^(?:0|[1-9]\\d{0,2})(?:\\.([0-9]{2}|[0-9]{1}))?$")){
-                        Book b = new Book();
-                        b.setTitle(title);
-                        b.setFirstName(fName);
-                        b.setLastName(lName);
-                        b.setPrice(Double.parseDouble(price));
-                        books.add(b);
-                        saveBooks();
-                        lblStatus.setText("Book Added Successfully!");
+     
+            if(checkTitle(books, title)){
+                if(title.equals("")== false && fName.equals("")== false &&
+                    lName.equals("")== false && price.equals("")== false){
+                    if(txtTitle.isEditable() == true){
+                        if(price.matches("^(?:0|[1-9]\\d{0,2})(?:\\.([0-9]{2}|[0-9]{1}))?$")){
+                            Book b = new Book();
+                            b.setTitle(title);
+                            b.setFirstName(fName);
+                            b.setLastName(lName);
+                            b.setPrice(Double.parseDouble(price));
+                            books.add(b);
+                            saveBooks();
+                            lblStatus.setText("Book Added Successfully!");
+                        }else{
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error");
+                            alert.setHeaderText("Invalid Entry");
+                            alert.setContentText("Please enter a price from $0.00 - $999.99! \n" 
+                                + " And no leading zeros.");
+                            alert.show(); 
+                            lblStatus.setText("Error: Book not added!");
+                            txtPrice.requestFocus();
+                        }
                     }else{
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Error");
-                        alert.setHeaderText("Invalid Entry");
-                        alert.setContentText("Please enter a price from $0.00 - $999.99! \n" 
-                            + " And no leading zeros.");
+                        alert.setHeaderText("Cannot Duplicate");
+                        alert.setContentText("Cannot add book already on list. \n" +
+                                "To update book please select UPDATE.");
                         alert.show(); 
                         lblStatus.setText("Error: Book not added!");
-                        txtPrice.requestFocus();
+                        txtTitle.setEditable(true);
+                        txtFirstName.setEditable(true);
+                        txtLastName.setEditable(true);
+                        txtPrice.setEditable(true);
                     }
-                }else{
+                } else {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
-                    alert.setHeaderText("Cannot Duplicate");
-                    alert.setContentText("Cannot add book already on list. \n" +
-                            "To update book please select UPDATE.");
+                    alert.setHeaderText("Invalid Entry");
+                    alert.setContentText("All feilds must be filled!");
                     alert.show(); 
                     lblStatus.setText("Error: Book not added!");
-                    txtTitle.setEditable(true);
-                    txtFirstName.setEditable(true);
-                    txtLastName.setEditable(true);
-                    txtPrice.setEditable(true);
                 }
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Invalid Entry");
-                alert.setContentText("All feilds must be filled!");
-                alert.show(); 
-                lblStatus.setText("Error: Book not added!");
             }
-            
             txtTitle.clear();
             txtFirstName.clear();
             txtLastName.clear();
@@ -245,7 +246,7 @@ public class MainScreenController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Error");
-            alert.setContentText("There is no list to select.");
+            alert.setContentText("No list item to select or was selected.");
             alert.show();         
         }
     }
@@ -410,7 +411,22 @@ public class MainScreenController implements Initializable {
             alert.show();   
         }
     }
-     
+    
+    private boolean checkTitle(ArrayList<Book> books, String title){
+        for(Book b: books){
+            if(b.getTitle().equals(title)){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Already Exists");
+                alert.setContentText("Entry already exists : Cannot duplicate title.");
+                alert.show();  
+                lblStatus.setText("Book not added: Cannot Duplicate title");
+                return false;
+            }
+        }
+        return true;
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
