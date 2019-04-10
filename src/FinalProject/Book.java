@@ -7,7 +7,7 @@ package FinalProject;
 
 /**
  *
- * @author Kowsiya Sri
+ * @author Mary Fahmy & Kowsiya Sri
  */
 public class Book implements java.io.Serializable{
     

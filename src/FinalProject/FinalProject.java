@@ -18,7 +18,7 @@ import javafx.stage.WindowEvent;
 
 /**
  *
- * @author Kowsiya Sri
+ * @author Mary Fahmy & Kowsiya Sri
  */
 public class FinalProject extends Application {
     
