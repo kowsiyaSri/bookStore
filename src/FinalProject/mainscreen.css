@@ -2,6 +2,16 @@
  * Empty Stylesheet file.
  */
 
-.mainFxmlClass {
-
+#border{
+    -fx-background-color: lightblue;
+ 
+        
 }
+.button{
+    -fx-background-color: darkblue;
+    -fx-text-fill: whitesmoke;
+    -fx-font: sans-serif;
+   
+}
+
+

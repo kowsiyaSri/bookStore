@@ -1,0 +1,11 @@
+
+
+#gridpane{
+    -fx-background-color: lightblue;
+}
+
+.button{
+    -fx-background-color: darkblue;
+    -fx-text-fill: white;
+    
+}
